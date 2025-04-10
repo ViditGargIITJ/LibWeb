@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Zone - Admin Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    header {
+      background-color: #003366;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    main {
+      padding: 2rem;
+    }
+    section {
+      background-color: white;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      color: #003366;
+      margin-bottom: 0.5rem;
+    }
+    ul {
+      padding-left: 1.5rem;
+    }
+    .heatmap, .voice-heatmap, .crowd-heatmap, .flags, .recommendations, .reports {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    button {
+      background-color: #003366;
+      color: white;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0055aa;
+    }
+    .flag-list {
+      background: #f8f8f8;
+      border: 1px solid #ddd;
+      padding: 1rem;
+      border-radius: 5px;
+    }
+    .flag-item {
+      margin-bottom: 0.5rem;
+    }
+    .heatmap-image {
+      width: 100%;
+      height: 200px;
+      background-color: #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-style: italic;
+      color: #666;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Study Zone Optimization - Admin Dashboard</h1>
+  </header>
+  <main>
+    <section class="heatmap">
+      <h2>📊 General Heatmap</h2>
+      <p>Monitor overall activity across study zones.</p>
+      <div class="heatmap-image">[ Static Heatmap Placeholder - Overall Activity ]</div>
+      <ul>
+        <li><strong>Zone A:</strong> 15% occupied, quiet</li>
+        <li><strong>Zone B:</strong> 65% occupied, moderate noise</li>
+        <li><strong>Zone C:</strong> 95% occupied, noisy</li>
+      </ul>
+    </section>
+
+    <section class="voice-heatmap">
+      <h2>🔊 Voice Pattern Heatmap</h2>
+      <p>Shows regions with elevated voice activity.</p>
+      <div class="heatmap-image">[ Static Heatmap Placeholder - Voice Levels ]</div>
+      <ul>
+        <li>Zone B: High conversation intensity detected</li>
+        <li>Zone C: Frequent noise spikes from 1 PM to 3 PM</li>
+        <li>Zone A: Mostly silent</li>
+      </ul>
+    </section>
+
+    <section class="crowd-heatmap">
+      <h2>👥 Crowd Density Heatmap</h2>
+      <p>Displays current and historical crowding patterns.</p>
+      <div class="heatmap-image">[ Static Heatmap Placeholder - Crowd Patterns ]</div>
+      <ul>
+        <li>Zone A: Consistently underutilized</li>
+        <li>Zone B: Peak at 12 PM - 2 PM</li>
+        <li>Zone C: Overcrowded during most hours</li>
+      </ul>
+    </section>
+
+    <section class="flags">
+      <h2>🚩 Flagged Incidents</h2>
+      <div class="flag-list">
+        <div class="flag-item">Zone B - Loud conversation detected (12:45 PM)</div>
+        <div class="flag-item">Zone C - Excessive movement/noise (1:30 PM)</div>
+        <div class="flag-item">Zone A - Phone call violation (2:10 PM)</div>
+      </div>
+    </section>
+
+    <section class="recommendations">
+      <h2>💡 Action Recommendations</h2>
+      <ul>
+        <li>Send reminder notifications to students in Zone C</li>
+        <li>Deploy additional monitoring in Zone B during lunch hours</li>
+        <li>Reorganize furniture in Zone A for better acoustic control</li>
+      </ul>
+    </section>
+
+    <section class="reports">
+      <h2>📁 Reports & Predictions</h2>
+      <p>Generate and download usage analytics to support planning.</p>
+      <button>Download Weekly Report</button>
+      <button>View Occupancy Trends</button>
+    </section>
+  </main>
+</body>
+</html>
