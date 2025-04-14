@@ -2,209 +2,541 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Worker Performance Dashboard</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body {
+    :root {
+      --primary: #2d3e50;
+      --secondary: #00bcd4;
+      --success: #4caf50;
+      --warning: #ff9800;
+      --danger: #e53935;
+      --info: #2196f3;
+      --light: #f5f7fa;
+      --dark: #333;
+      --gray: #e0e0e0;
+      --white: #ffffff;
+      --purple: #6a1b9a;
+      --teal: #00796b;
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #f5f7fa;
-      color: #333;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--light);
+      color: var(--dark);
+      line-height: 1.6;
     }
 
     header {
-      background: #2d3e50;
-      color: white;
-      padding: 20px;
+      background: linear-gradient(135deg, var(--primary), #1a2a3a);
+      color: var(--white);
+      padding: 1.5rem;
       text-align: center;
-      font-size: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 10;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .employee-profile {
+      background: var(--white);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .employee-info h2 {
+      color: var(--primary);
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .employee-info p {
+      margin-bottom: 0.4rem;
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    .performance-comparison h3 {
+      color: var(--primary);
+      font-size: 1.2rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .comparison-list {
+      list-style: none;
+    }
+
+    .comparison-list li {
+      margin-bottom: 0.6rem;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .dashboard {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      padding: 30px;
+      grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+      gap: 1.5rem;
+      padding: 1.5rem 0;
     }
 
     .card {
-      background: white;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      background: var(--white);
+      border-radius: 12px;
+      padding: 1.75rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
     }
 
     .card h2 {
-      font-size: 18px;
-      color: #2d3e50;
-      margin-bottom: 10px;
+      font-size: 1.3rem;
+      color: var(--primary);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .progress-container {
+      margin-bottom: 1.25rem;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
     }
 
     .progress-bar {
-      background: #e0e0e0;
+      background: var(--gray);
       border-radius: 8px;
-      height: 18px;
+      height: 12px;
       overflow: hidden;
     }
 
     .progress {
       height: 100%;
-      background: #4caf50;
+      border-radius: 8px;
     }
 
     .alert {
-      color: #e53935;
-      font-weight: bold;
+      padding: 0.9rem;
+      border-radius: 8px;
+      margin-bottom: 0.9rem;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .alert-warning {
+      background-color: rgba(255, 152, 0, 0.1);
+      border-left: 4px solid var(--warning);
+      color: #b36a00;
+    }
+
+    .alert-danger {
+      background-color: rgba(229, 57, 53, 0.1);
+      border-left: 4px solid var(--danger);
+      color: #c62828;
+    }
+
+    .alert-success {
+      background-color: rgba(76, 175, 80, 0.1);
+      border-left: 4px solid var(--success);
+      color: #2e7d32;
+    }
+
+    .alert-info {
+      background-color: rgba(33, 150, 243, 0.1);
+      border-left: 4px solid var(--info);
+      color: #1565c0;
     }
 
     .data-stream {
-      font-family: monospace;
-      background: #f0f0f0;
-      padding: 10px;
-      border-radius: 5px;
-      font-size: 14px;
-      height: 100px;
+      font-family: 'Roboto Mono', monospace;
+      background: #f8f9fa;
+      padding: 1.25rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      height: 140px;
       overflow-y: auto;
+      line-height: 1.8;
+      border: 1px solid #eee;
     }
 
     .status {
-      font-weight: bold;
-      color: #2196f3;
+      font-weight: 600;
     }
 
-    .icon {
-      margin-right: 8px;
+    .divider {
+      height: 1px;
+      background-color: #eee;
+      margin: 1.25rem 0;
     }
+
     .card.ai {
-      background: #eef7fa;
-      border-left: 5px solid #00bcd4;
+      background: linear-gradient(to right, rgba(0, 188, 212, 0.03), rgba(0, 188, 212, 0.08)));
+      border-left: 4px solid var(--secondary);
+    }
+
+    .card.purple {
+      background: linear-gradient(to right, rgba(106, 27, 154, 0.03), rgba(106, 27, 154, 0.08)));
+      border-left: 4px solid var(--purple);
+    }
+
+    .section-title {
+      color: var(--secondary);
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-title.purple {
+      color: var(--purple);
+    }
+
+    .section-title.teal {
+      color: var(--teal);
+    }
+
+    .benefits-list, .insights-list {
+      list-style: none;
+      margin-bottom: 1.25rem;
+    }
+
+    .benefits-list li, .insights-list li {
+      margin-bottom: 0.75rem;
+      font-size: 1rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      line-height: 1.5;
+    }
+
+    .metric-value {
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.3rem 0.6rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background-color: var(--secondary);
+      color: white;
+      margin-left: 0.5rem;
+    }
+
+    .badge.purple {
+      background-color: var(--purple);
+    }
+
+    .badge.teal {
+      background-color: var(--teal);
+    }
+
+    .wide-card {
+      grid-column: span 2;
+    }
+
+    @media (max-width: 1200px) {
+      .dashboard {
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      }
+      
+      .wide-card {
+        grid-column: span 1;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+      
+      .employee-profile {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
-<!-- ... your existing head section ... -->
 <body>
 
   <header>
-    🏭 Worker Performance Dashboard
+    <h1><i class="fas fa-industry"></i> Worker Performance Dashboard</h1>
   </header>
 
-  <!-- Employee Info Section -->
-  <div style="padding: 20px; background: #e3eaf2; display: flex; flex-wrap: wrap; justify-content: space-between;">
-    <div>
-      <h3 style="margin: 0; color: #2d3e50;">👷 Employee: <strong>Rajesh Kumar</strong></h3>
-      <p style="margin: 4px 0;">Employee ID: <strong>#WK1209</strong></p>
-      <p style="margin: 4px 0;">Role: <strong>Machine Operator</strong></p>
-      <p style="margin: 4px 0;">Department: <strong>Assembly Line A</strong></p>
+  <div class="container">
+    <!-- Employee Profile Section -->
+    <div class="employee-profile">
+      <div class="employee-info">
+        <h2><i class="fas fa-user-hard-hat"></i> Rajesh Kumar</h2>
+        <p><strong>Employee ID:</strong> #WK1209</p>
+        <p><strong>Role:</strong> Machine Operator</p>
+        <p><strong>Department:</strong> Assembly Line A</p>
+        <p><strong>Shift:</strong> Morning (6:00 AM - 2:00 PM)</p>
+      </div>
+
+      <div class="performance-comparison">
+        <h3><i class="fas fa-chart-bar"></i> Performance Comparison</h3>
+        <ul class="comparison-list">
+          <li><i class="fas fa-arrow-up" style="color: var(--success);"></i> <strong>Productivity:</strong> 88% (Min: 60%, Max: 95%, Avg: 80%)</li>
+          <li><i class="fas fa-bed" style="color: var(--warning);"></i> <strong>Fatigue Level:</strong> 45% (Min: 20%, Max: 70%, Avg: 50%)</li>
+          <li><i class="fas fa-exclamation-triangle" style="color: var(--danger);"></i> <strong>Safety Violations:</strong> 2 today (Min: 0, Max: 5, Avg: 1.5)</li>
+          <li><i class="fas fa-graduation-cap" style="color: var(--info);"></i> <strong>Skill Progress:</strong> 65% (Avg: 58%)</li>
+        </ul>
+      </div>
     </div>
 
-    <div style="margin-top: 10px;">
-      <h4 style="margin: 0; color: #2d3e50;">📊 Performance Comparison</h4>
-      <ul style="list-style: none; padding: 0; margin-top: 5px;">
-        <li>🔼 <strong>Productivity:</strong> 88% (Min: 60%, Max: 95%, Avg: 80%)</li>
-        <li>😴 <strong>Fatigue Level:</strong> 45% (Min: 20%, Max: 70%, Avg: 50%)</li>
-        <li>⚠️ <strong>Safety Violations:</strong> 2 today (Min: 0, Max: 5, Avg: 1.5)</li>
-        <li>🎓 <strong>Skill Progress:</strong> 65% (Avg: 58%)</li>
-      </ul>
+    <!-- Dashboard Metrics -->
+    <div class="dashboard">
+      <!-- Fatigue Level -->
+      <div class="card">
+        <h2><i class="fas fa-bed" style="color: var(--warning);"></i> Fatigue Level</h2>
+        <div class="progress-container">
+          <div class="progress-label">
+            <span>Moderate fatigue</span>
+            <span>45%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress" style="width: 45%; background-color: var(--warning);"></div>
+          </div>
+        </div>
+        <div class="alert alert-warning">
+          <i class="fas fa-coffee"></i> Recommend short break within next 30 minutes
+        </div>
+        <div class="alert alert-info">
+          <i class="fas fa-moon"></i> Sleep quality last night: 82% (Good)
+        </div>
+      </div>
+
+      <!-- Productivity -->
+      <div class="card">
+        <h2><i class="fas fa-chart-line" style="color: var(--success);"></i> Productivity</h2>
+        <div class="progress-container">
+          <div class="progress-label">
+            <span>Current performance</span>
+            <span>88%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress" style="width: 88%; background-color: var(--success);"></div>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.25rem;">
+          <div>
+            <p><i class="fas fa-bullseye"></i> <strong>Daily Target:</strong> 90%</p>
+            <p><i class="fas fa-trophy"></i> <strong>Best This Week:</strong> 92% (Tue)</p>
+          </div>
+          <div>
+            <p><i class="fas fa-calendar-week"></i> <strong>Weekly Avg:</strong> 86%</p>
+            <p><i class="fas fa-arrow-up"></i> <strong>Improvement:</strong> +4% from last week</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Safety Violations -->
+      <div class="card">
+        <h2><i class="fas fa-exclamation-triangle" style="color: var(--danger);"></i> Safety Compliance</h2>
+        <div class="alert alert-danger">
+          <i class="fas fa-user-slouch"></i> Unsafe posture detected at Station 3 (11:24 AM)
+        </div>
+        <div class="alert alert-danger">
+          <i class="fas fa-hard-hat"></i> No helmet detected at entry zone (8:15 AM)
+        </div>
+        <div class="alert alert-success">
+          <i class="fas fa-check-circle"></i> All PPE compliance checks passed
+        </div>
+        <div class="progress-container" style="margin-top: 1rem;">
+          <div class="progress-label">
+            <span>Safety Score</span>
+            <span>85%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress" style="width: 85%; background-color: var(--info);"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sensor Stream -->
+      <div class="card">
+        <h2><i class="fas fa-microchip" style="color: var(--info);"></i> Wearable Sensor Data</h2>
+        <div class="data-stream">
+          <span class="metric-value">Heart Rate:</span> 88 bpm (Normal range: 60-100)<br>
+          <span class="metric-value">Temperature:</span> 37.1°C (Normal: 36.5-37.5)<br>
+          <span class="metric-value">Motion Activity:</span> 78% (Mostly stationary)<br>
+          <span class="metric-value">Posture Alert:</span> Slouch Detected (11:24 AM)<br>
+          <span class="metric-value">Battery Level:</span> 72% (4.2 hours remaining)<br>
+          <span class="metric-value">Last Update:</span> 11:45 AM (15 seconds ago)<br>
+          <span class="metric-value">Signal Strength:</span> Excellent (5/5 bars)
+        </div>
+      </div>
+
+      <!-- Equipment Status -->
+      <div class="card wide-card">
+        <h2><i class="fas fa-tools" style="color: var(--info);"></i> Equipment & Maintenance Status</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <div>
+            <h3 class="section-title"><i class="fas fa-exclamation-circle"></i> Alerts</h3>
+            <div class="alert alert-warning">
+              <i class="fas fa-conveyor-belt"></i> Conveyor #2 needs inspection within 24h
+            </div>
+            <div class="alert alert-info">
+              <i class="fas fa-check-circle"></i> All other equipment functioning normally
+            </div>
+          </div>
+          <div>
+            <h3 class="section-title"><i class="fas fa-chart-pie"></i> Metrics</h3>
+            <div class="progress-container">
+              <div class="progress-label">
+                <span>Machine Uptime</span>
+                <span>98.7%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress" style="width: 98.7%; background-color: var(--success);"></div>
+              </div>
+            </div>
+            <div class="progress-container">
+              <div class="progress-label">
+                <span>Maintenance Score</span>
+                <span>92%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress" style="width: 92%; background-color: var(--info);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skill Progress -->
+      <div class="card">
+        <h2><i class="fas fa-graduation-cap" style="color: var(--info);"></i> Skill Development</h2>
+        <div class="progress-container">
+          <div class="progress-label">
+            <span>Precision Tool Handling</span>
+            <span>65%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress" style="width: 65%; background-color: var(--info);"></div>
+          </div>
+        </div>
+        <div style="margin-top: 1.25rem;">
+          <p><i class="fas fa-medal"></i> <strong>Current Certification:</strong> Level 2 Operator</p>
+          <p><i class="fas fa-arrow-up"></i> <strong>Next Level:</strong> 85% required for Level 3</p>
+          <p><i class="fas fa-clock"></i> <strong>Time to Completion:</strong> ~3 weeks at current pace</p>
+        </div>
+      </div>
+
+      <!-- AI-Based Incentive System -->
+      <div class="card ai wide-card">
+        <h2><i class="fas fa-robot" style="color: var(--secondary);"></i> AI Incentive & Performance Engine</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <div>
+            <h3 class="section-title teal"><i class="fas fa-bolt"></i> Real-Time Incentives</h3>
+            <ul class="benefits-list">
+              <li><i class="fas fa-rupee-sign"></i> <strong>₹1,200 Micro-Bonus</strong> credited for 3 consecutive violation-free days</li>
+              <li><i class="fas fa-award"></i> <strong>"Safety Champion"</strong> badge unlocked <span class="badge teal">New</span></li>
+              <li><i class="fas fa-star"></i> Eligible for <strong>8% dynamic performance bonus</strong> this cycle</li>
+              <li><i class="fas fa-calendar-check"></i> <strong>Attendance Bonus:</strong> ₹500 for perfect attendance this month</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="section-title teal"><i class="fas fa-brain"></i> Predictive Insights</h3>
+            <ul class="insights-list">
+              <li><i class="fas fa-chart-line"></i> Ranks in <strong>Top 12%</strong> across Assembly Line A</li>
+              <li><i class="fas fa-user-shield"></i> <strong>Low attrition risk</strong> (89% retention probability)</li>
+              <li><i class="fas fa-lightbulb"></i> AI recommends <strong>retention bonus eligibility</strong> next cycle</li>
+              <li><i class="fas fa-project-diagram"></i> <strong>Peer Influence:</strong> Positive impact on 3 team members</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Engagement & Behavioral Analytics -->
+      <div class="card purple wide-card">
+        <h2><i class="fas fa-user-check" style="color: var(--purple);"></i> Engagement & Behavioral Analytics</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <div>
+            <h3 class="section-title purple"><i class="fas fa-stopwatch"></i> Responsiveness</h3>
+            <ul class="benefits-list">
+              <li><i class="fas fa-stopwatch"></i> Average alert response: <strong>45 seconds</strong></li>
+              <li><i class="fas fa-fire-extinguisher"></i> Hazard resolution: <strong>3 minutes</strong></li>
+              <li><i class="fas fa-mobile-alt"></i> Feedback response rate: <strong>92%</strong></li>
+              <li><i class="fas fa-bell"></i> Notification acknowledgment: <strong>88%</strong></li>
+            </ul>
+
+            <h3 class="section-title purple"><i class="fas fa-users"></i> Teamwork</h3>
+            <ul class="insights-list">
+              <li><i class="fas fa-exchange-alt"></i> <strong>6 task handoffs</strong> completed</li>
+              <li><i class="fas fa-comments"></i> Provided <strong>3 peer feedbacks</strong></li>
+              <li><i class="fas fa-hands-helping"></i> <strong>2 collaborative modules</strong> finished</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="section-title purple"><i class="fas fa-lightbulb"></i> Recommendations</h3>
+            <ul class="insights-list">
+              <li><i class="fas fa-sync-alt"></i> Task rotation to reduce fatigue</li>
+              <li><i class="fas fa-book"></i> "Advanced Machine Monitoring" course</li>
+              <li><i class="fas fa-bell"></i> Wellness prompt at <strong>12:30 PM</strong></li>
+              <li><i class="fas fa-utensils"></i> Lunch break optimization suggestion</li>
+            </ul>
+
+            <h3 class="section-title purple"><i class="fas fa-chart-bar"></i> Weekly Trends</h3>
+            <ul class="insights-list">
+              <li><i class="fas fa-arrow-up"></i> <strong>+12%</strong> productivity on Wednesdays</li>
+              <li><i class="fas fa-arrow-down"></i> <strong>-8%</strong> focus after 1:00 PM</li>
+              <li><i class="fas fa-calendar"></i> Best performance days: <strong>Tuesday, Wednesday</strong></li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-
-  <!-- Your existing dashboard below this remains unchanged -->
-  <div class="dashboard">
-    <!-- Fatigue Level -->
-    <div class="card">
-      <h2><i class="fas fa-bed icon"></i> Fatigue Level</h2>
-      <div class="progress-bar">
-        <div class="progress" style="width: 45%; background-color: #ff9800;"></div>
-      </div>
-      <p>Moderate fatigue - Recommend short break</p>
-    </div>
-
-    <!-- Productivity -->
-    <div class="card">
-      <h2><i class="fas fa-chart-line icon"></i> Productivity</h2>
-      <p><strong>88%</strong> task completion today</p>
-      <p>Target: 90%</p>
-    </div>
-
-    <!-- Safety Violations -->
-    <div class="card">
-      <h2><i class="fas fa-exclamation-triangle icon"></i> Safety Violations</h2>
-      <p class="alert">⚠️ Unsafe posture detected at Station 3</p>
-      <p class="alert">⚠️ No helmet detected at entry zone</p>
-    </div>
-
-    <!-- Sensor Stream -->
-    <div class="card">
-      <h2><i class="fas fa-microchip icon"></i> Wearable Sensor Stream</h2>
-      <div class="data-stream">
-        Heart Rate: 88 bpm<br>
-        Temperature: 37.1°C<br>
-        Motion: Stable<br>
-        Posture: Slouch Detected<br>
-        Battery: 72%<br>
-      </div>
-    </div>
-
-    <!-- Maintenance Alerts -->
-    <div class="card">
-      <h2><i class="fas fa-tools icon"></i> Predictive Maintenance</h2>
-      <p class="status">🛠️ Alert: Conveyor #2 needs inspection within 24h</p>
-      <p class="status">✔️ All other equipment functioning normally</p>
-    </div>
-
-    <!-- Skill Progress -->
-    <div class="card">
-      <h2><i class="fas fa-graduation-cap icon"></i> Skill Development</h2>
-      <div class="progress-bar">
-        <div class="progress" style="width: 65%;"></div>
-      </div>
-      <p>Module: Precision Tool Handling</p>
-    </div>
-  </div>
-
-<!-- AI-Based Incentive System -->
-<div class="card">
-  <h2><i class="fas fa-robot icon"></i> AI Incentive Engine</h2>
-
-  <p><strong>Bonus Triggered:</strong> ₹1,200 Micro-Bonus for 3 Days of Zero Violations</p>
-  <p><strong>Dynamic Adjustment:</strong> 8% Performance Bonus Suggested (based on 88% productivity)</p>
-  <p><strong>Attendance Bonus:</strong> Full Shift Compliance Tracked via Wearables</p>
-
-  <hr style="margin: 15px 0; border: none; border-top: 1px solid #eee;">
-
-  <p><strong>🔄 Real-Time Rewards:</strong> Auto-credit system integrated with HRMS</p>
-  <p><strong>📈 Predictive Insight:</strong> Top 10% performers may receive retention bonus next month</p>
-
-  <hr style="margin: 15px 0; border: none; border-top: 1px solid #eee;">
-
-  <ul style="padding-left: 20px; font-size: 14px; line-height: 1.6;">
-    <li>✅ Increased Motivation via Instant Incentives</li>
-    <li>✅ Reduced Turnover with Fair Pay Models</li>
-    <li>✅ Cost-Efficient Bonus Distribution</li>
-  </ul>
-</div>
-
-<!-- Engagement & Behavioral Analytics -->
-<div class="card">
-  <h2><i class="fas fa-user-check icon"></i> Engagement & Behavioral Analytics</h2>
-
-  <p><strong>🚨 Safety Alert Response:</strong> Incident at Station 5 reported & resolved within 3 mins</p>
-  <p><strong>🤝 Team Collaboration:</strong> 5 active task handoffs in the last 2 hours</p>
-  <p><strong>💬 Feedback:</strong> 3 workflow suggestions submitted today via mobile portal</p>
-  <p><strong>😊 Mood Tracker:</strong> 76% workers reported "Neutral" or "Happy" via wearable survey</p>
-
-  <hr style="margin: 15px 0; border: none; border-top: 1px solid #eee;">
-
-  <p><strong>📊 Behavioral Analytics:</strong></p>
-  <ul style="padding-left: 20px; font-size: 14px; line-height: 1.6;">
-    <li>🧠 Learning module engagement: 62% active users completed last training</li>
-    <li>⚡ Micro-feedback sent every 4 hours to improve attention & safety focus</li>
-    <li>📍 Break recommendations issued to 12% of workers due to fatigue patterns</li>
-  </ul>
-
-  <p><strong>🧩 Personalized Plan:</strong> Task rotation and refresher course in “Ergonomics & Safety” recommended for 3 workers showing decline in focus.</p>
-</div>
-
 
 </body>
+</html>	
