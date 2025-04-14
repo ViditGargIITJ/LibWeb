@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Worker Performance Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f5f7fa;
+      color: #333;
+    }
+
+    header {
+      background: #2d3e50;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 30px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .card h2 {
+      font-size: 18px;
+      color: #2d3e50;
+      margin-bottom: 10px;
+    }
+
+    .progress-bar {
+      background: #e0e0e0;
+      border-radius: 8px;
+      height: 18px;
+      overflow: hidden;
+    }
+
+    .progress {
+      height: 100%;
+      background: #4caf50;
+    }
+
+    .alert {
+      color: #e53935;
+      font-weight: bold;
+    }
+
+    .data-stream {
+      font-family: monospace;
+      background: #f0f0f0;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 14px;
+      height: 100px;
+      overflow-y: auto;
+    }
+
+    .status {
+      font-weight: bold;
+      color: #2196f3;
+    }
+
+    .icon {
+      margin-right: 8px;
+    }
+    .card.ai {
+      background: #eef7fa;
+      border-left: 5px solid #00bcd4;
+    }
+  </style>
+</head>
+<!-- ... your existing head section ... -->
+<body>
+
+  <header>
+    🏭 Worker Performance Dashboard
+  </header>
+
+  <!-- Employee Info Section -->
+  <div style="padding: 20px; background: #e3eaf2; display: flex; flex-wrap: wrap; justify-content: space-between;">
+    <div>
+      <h3 style="margin: 0; color: #2d3e50;">👷 Employee: <strong>Rajesh Kumar</strong></h3>
+      <p style="margin: 4px 0;">Employee ID: <strong>#WK1209</strong></p>
+      <p style="margin: 4px 0;">Role: <strong>Machine Operator</strong></p>
+      <p style="margin: 4px 0;">Department: <strong>Assembly Line A</strong></p>
+    </div>
+
+    <div style="margin-top: 10px;">
+      <h4 style="margin: 0; color: #2d3e50;">📊 Performance Comparison</h4>
+      <ul style="list-style: none; padding: 0; margin-top: 5px;">
+        <li>🔼 <strong>Productivity:</strong> 88% (Min: 60%, Max: 95%, Avg: 80%)</li>
+        <li>😴 <strong>Fatigue Level:</strong> 45% (Min: 20%, Max: 70%, Avg: 50%)</li>
+        <li>⚠️ <strong>Safety Violations:</strong> 2 today (Min: 0, Max: 5, Avg: 1.5)</li>
+        <li>🎓 <strong>Skill Progress:</strong> 65% (Avg: 58%)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Your existing dashboard below this remains unchanged -->
+  <div class="dashboard">
+    <!-- Fatigue Level -->
+    <div class="card">
+      <h2><i class="fas fa-bed icon"></i> Fatigue Level</h2>
+      <div class="progress-bar">
+        <div class="progress" style="width: 45%; background-color: #ff9800;"></div>
+      </div>
+      <p>Moderate fatigue - Recommend short break</p>
+    </div>
+
+    <!-- Productivity -->
+    <div class="card">
+      <h2><i class="fas fa-chart-line icon"></i> Productivity</h2>
+      <p><strong>88%</strong> task completion today</p>
+      <p>Target: 90%</p>
+    </div>
+
+    <!-- Safety Violations -->
+    <div class="card">
+      <h2><i class="fas fa-exclamation-triangle icon"></i> Safety Violations</h2>
+      <p class="alert">⚠️ Unsafe posture detected at Station 3</p>
+      <p class="alert">⚠️ No helmet detected at entry zone</p>
+    </div>
+
+    <!-- Sensor Stream -->
+    <div class="card">
+      <h2><i class="fas fa-microchip icon"></i> Wearable Sensor Stream</h2>
+      <div class="data-stream">
+        Heart Rate: 88 bpm<br>
+        Temperature: 37.1°C<br>
+        Motion: Stable<br>
+        Posture: Slouch Detected<br>
+        Battery: 72%<br>
+      </div>
+    </div>
+
+    <!-- Maintenance Alerts -->
+    <div class="card">
+      <h2><i class="fas fa-tools icon"></i> Predictive Maintenance</h2>
+      <p class="status">🛠️ Alert: Conveyor #2 needs inspection within 24h</p>
+      <p class="status">✔️ All other equipment functioning normally</p>
+    </div>
+
+    <!-- Skill Progress -->
+    <div class="card">
+      <h2><i class="fas fa-graduation-cap icon"></i> Skill Development</h2>
+      <div class="progress-bar">
+        <div class="progress" style="width: 65%;"></div>
+      </div>
+      <p>Module: Precision Tool Handling</p>
+    </div>
+  </div>
+
+<!-- AI-Based Incentive System -->
+<div class="card">
+  <h2><i class="fas fa-robot icon"></i> AI Incentive Engine</h2>
+
+  <p><strong>Bonus Triggered:</strong> ₹1,200 Micro-Bonus for 3 Days of Zero Violations</p>
+  <p><strong>Dynamic Adjustment:</strong> 8% Performance Bonus Suggested (based on 88% productivity)</p>
+  <p><strong>Attendance Bonus:</strong> Full Shift Compliance Tracked via Wearables</p>
+
+  <hr style="margin: 15px 0; border: none; border-top: 1px solid #eee;">
+
+  <p><strong>🔄 Real-Time Rewards:</strong> Auto-credit system integrated with HRMS</p>
+  <p><strong>📈 Predictive Insight:</strong> Top 10% performers may receive retention bonus next month</p>
+
+  <hr style="margin: 15px 0; border: none; border-top: 1px solid #eee;">
+
+  <ul style="padding-left: 20px; font-size: 14px; line-height: 1.6;">
+    <li>✅ Increased Motivation via Instant Incentives</li>
+    <li>✅ Reduced Turnover with Fair Pay Models</li>
+    <li>✅ Cost-Efficient Bonus Distribution</li>
+  </ul>
+</div>
+
+<!-- Engagement & Behavioral Analytics -->
+<div class="card">
+  <h2><i class="fas fa-user-check icon"></i> Engagement & Behavioral Analytics</h2>
+
+  <p><strong>🚨 Safety Alert Response:</strong> Incident at Station 5 reported & resolved within 3 mins</p>
+  <p><strong>🤝 Team Collaboration:</strong> 5 active task handoffs in the last 2 hours</p>
+  <p><strong>💬 Feedback:</strong> 3 workflow suggestions submitted today via mobile portal</p>
+  <p><strong>😊 Mood Tracker:</strong> 76% workers reported "Neutral" or "Happy" via wearable survey</p>
+
+  <hr style="margin: 15px 0; border: none; border-top: 1px solid #eee;">
+
+  <p><strong>📊 Behavioral Analytics:</strong></p>
+  <ul style="padding-left: 20px; font-size: 14px; line-height: 1.6;">
+    <li>🧠 Learning module engagement: 62% active users completed last training</li>
+    <li>⚡ Micro-feedback sent every 4 hours to improve attention & safety focus</li>
+    <li>📍 Break recommendations issued to 12% of workers due to fatigue patterns</li>
+  </ul>
+
+  <p><strong>🧩 Personalized Plan:</strong> Task rotation and refresher course in “Ergonomics & Safety” recommended for 3 workers showing decline in focus.</p>
+</div>
+
+
+</body>
